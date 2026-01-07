@@ -1,0 +1,221 @@
+[
+    {
+        "id": "c419b797d4fe0222",
+        "type": "debug",
+        "z": "9a64e81f8c4438a5",
+        "name": "debug 52",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "f6f2187d.f17ca8",
+        "type": "function",
+        "z": "9a64e81f8c4438a5",
+        "name": "Format POST Request",
+        "func": "// 1. Credentials\nconst user = \"admin\";\nconst pass = \"private\";\n\n// 2. Set Headers\nmsg.method = \"POST\";\nmsg.headers = {};\nconst authToken = Buffer.from(user + \":\" + pass).toString('base64');\nmsg.headers[\"Authorization\"] = \"Basic \" + authToken;\nmsg.headers[\"Content-Type\"] = \"application/json\";\n\n// 3. Handle CSV Data (Check if msg.payload is an array or object)\nlet data = Array.isArray(msg.payload) ? msg.payload[0] : msg.payload;\n\n// 4. Extract IP and Port (using exact column names from your debug: Address and Port)\nconst ip = data.Address || \"192.168.1.6\"; // Fallback to test IP if undefined\nconst portNumber = data.Port || 3;\n\nmsg.url = `http://${ip}/iolink/v1/masters/1/ports/${portNumber}/configuration`;\n\n// 5. Prepare Payload\n// Your debug shows the column is named 'Configuration'\nlet description = data.Configuration || data.Description;\n\nif (typeof description === 'string') {\n    let cleanDesc = description.trim();\n\n    // Ensure keys and values have double quotes for valid JSON\n    // If the input is mode:DigitalOutput, this fixes it to \"mode\":\"DigitalOutput\"\n    if (!cleanDesc.includes('\"')) {\n        cleanDesc = cleanDesc.replace(/([^:]+):([^,]+)/g, '\"$1\":\"$2\"');\n    }\n\n    if (!cleanDesc.startsWith('{')) {\n        cleanDesc = '{' + cleanDesc + '}';\n    }\n\n    try {\n        msg.payload = JSON.parse(cleanDesc);\n    } catch (e) {\n        msg.payload = cleanDesc; // Fallback to string if parsing still fails\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1500,
+        "y": 220,
+        "wires": [
+            [
+                "0a767af8d8e0f684",
+                "e3456789.b12345"
+            ]
+        ]
+    },
+    {
+        "id": "c1234567.a89012",
+        "type": "csv",
+        "z": "9a64e81f8c4438a5",
+        "name": "",
+        "spec": "rfc",
+        "sep": ",",
+        "hdrin": true,
+        "hdrout": "all",
+        "multi": "mult",
+        "ret": "\\r\\n",
+        "temp": "Address, Name, Port",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": "",
+        "include_null_values": "",
+        "x": 1150,
+        "y": 220,
+        "wires": [
+            [
+                "4240cd32885ee02d",
+                "d55905d7f3917d0e"
+            ]
+        ]
+    },
+    {
+        "id": "e3456789.b12345",
+        "type": "http request",
+        "z": "9a64e81f8c4438a5",
+        "name": "POST Configuration",
+        "method": "use",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1740,
+        "y": 220,
+        "wires": [
+            [
+                "d4567890.c12345"
+            ]
+        ]
+    },
+    {
+        "id": "b0123456.901234",
+        "type": "inject",
+        "z": "9a64e81f8c4438a5",
+        "name": "Run CSV Data",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 560,
+        "y": 220,
+        "wires": [
+            [
+                "c419b797d4fe0222",
+                "a928ef2200c759e8"
+            ]
+        ]
+    },
+    {
+        "id": "d4567890.c12345",
+        "type": "debug",
+        "z": "9a64e81f8c4438a5",
+        "name": "Response",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1980,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "4240cd32885ee02d",
+        "type": "debug",
+        "z": "9a64e81f8c4438a5",
+        "name": "debug 53",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1240,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "0a767af8d8e0f684",
+        "type": "debug",
+        "z": "9a64e81f8c4438a5",
+        "name": "debug 55",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1700,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "a928ef2200c759e8",
+        "type": "file in",
+        "z": "9a64e81f8c4438a5",
+        "name": "",
+        "filename": "C:\\Users\\Rafael\\Downloads\\Switch_PortConfig.csv",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 870,
+        "y": 220,
+        "wires": [
+            [
+                "c1234567.a89012"
+            ]
+        ]
+    },
+    {
+        "id": "d55905d7f3917d0e",
+        "type": "split",
+        "z": "9a64e81f8c4438a5",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "property": "payload",
+        "x": 1290,
+        "y": 220,
+        "wires": [
+            [
+                "f6f2187d.f17ca8",
+                "72ee5e4d6b6dcf85"
+            ]
+        ]
+    },
+    {
+        "id": "72ee5e4d6b6dcf85",
+        "type": "debug",
+        "z": "9a64e81f8c4438a5",
+        "name": "debug 56",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1440,
+        "y": 120,
+        "wires": []
+    }
+]

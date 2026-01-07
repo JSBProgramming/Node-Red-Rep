@@ -1,0 +1,2 @@
+﻿Address,Name,Description
+192.168.1.6,Impact67_1,"{ ""payload"": { ""port"": ""2"", ""index"": ""0x1234"", ""subindex"": ""0x01"" } }"
