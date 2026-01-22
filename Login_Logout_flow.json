@@ -1,0 +1,314 @@
+[
+    {
+        "id": "login_flow_tab",
+        "type": "tab",
+        "label": "Murr Login System",
+        "disabled": false,
+        "info": "Custom login page for Murr dashboard"
+    },
+    {
+        "id": "http_get_login",
+        "type": "http in",
+        "z": "login_flow_tab",
+        "name": "GET /login",
+        "url": "/login",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 100,
+        "wires": [
+            [
+                "login_template"
+            ]
+        ]
+    },
+    {
+        "id": "login_template",
+        "type": "template",
+        "z": "login_flow_tab",
+        "name": "Login Page HTML",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "html",
+        "syntax": "mustache",
+        "template": "<!DOCTYPE html>\n<html>\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Murr Login</title>\n    <style>\n        * {\n            margin: 0;\n            padding: 0;\n            box-sizing: border-box;\n        }\n\n        body {\n            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;\n            min-height: 100vh;\n            background: linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #16a34a 100%);\n            display: flex;\n            align-items: center;\n            justify-content: center;\n            padding: 20px;\n            position: relative;\n        }\n\n        .bg-pattern {\n            position: absolute;\n            inset: 0;\n            opacity: 0.1;\n            background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0);\n            background-size: 40px 40px;\n        }\n\n        .login-card {\n            position: relative;\n            background: white;\n            border-radius: 24px;\n            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);\n            padding: 48px 40px;\n            width: 100%;\n            max-width: 440px;\n        }\n\n        .logo-container {\n            text-align: center;\n            margin-bottom: 32px;\n        }\n\n        .logo {\n            display: inline-block;\n            background: linear-gradient(135deg, #22c55e, #16a34a);\n            border-radius: 16px;\n            padding: 16px 20px;\n            margin-bottom: 16px;\n            box-shadow: 0 8px 16px rgba(34, 197, 94, 0.3);\n        }\n\n        .logo-text {\n            color: white;\n            font-size: 32px;\n            font-weight: bold;\n        }\n\n        h1 {\n            font-size: 36px;\n            font-weight: bold;\n            background: linear-gradient(to right, #22c55e, #16a34a);\n            -webkit-background-clip: text;\n            -webkit-text-fill-color: transparent;\n            background-clip: text;\n            margin-bottom: 8px;\n        }\n\n        .subtitle {\n            color: #6b7280;\n            font-size: 14px;\n        }\n\n        .input-group {\n            margin-bottom: 20px;\n        }\n\n        label {\n            display: block;\n            font-size: 14px;\n            font-weight: 500;\n            color: #374151;\n            margin-bottom: 8px;\n        }\n\n        .input-wrapper {\n            position: relative;\n        }\n\n        .input-icon {\n            position: absolute;\n            left: 12px;\n            top: 50%;\n            transform: translateY(-50%);\n            width: 20px;\n            height: 20px;\n            color: #9ca3af;\n            transition: color 0.2s;\n        }\n\n        input[type=\"text\"],\n        input[type=\"password\"] {\n            width: 100%;\n            padding: 12px 12px 12px 40px;\n            border: 1px solid #d1d5db;\n            border-radius: 12px;\n            font-size: 14px;\n            outline: none;\n            transition: all 0.2s;\n        }\n\n        input[type=\"text\"]:focus,\n        input[type=\"password\"]:focus {\n            border-color: #22c55e;\n            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);\n        }\n\n        input[type=\"text\"]:focus ~ .input-icon,\n        input[type=\"password\"]:focus ~ .input-icon {\n            color: #22c55e;\n        }\n\n        .remember-forgot {\n            display: flex;\n            justify-content: space-between;\n            align-items: center;\n            margin-bottom: 24px;\n            font-size: 14px;\n        }\n\n        .remember-label {\n            display: flex;\n            align-items: center;\n            cursor: pointer;\n            color: #6b7280;\n        }\n\n        input[type=\"checkbox\"] {\n            width: 16px;\n            height: 16px;\n            margin-right: 8px;\n            cursor: pointer;\n        }\n\n        .forgot-link {\n            color: #22c55e;\n            text-decoration: none;\n            font-weight: 500;\n            transition: color 0.2s;\n        }\n\n        .forgot-link:hover {\n            color: #16a34a;\n        }\n\n        .login-button {\n            width: 100%;\n            padding: 12px;\n            background: linear-gradient(to right, #22c55e, #16a34a);\n            color: white;\n            border: none;\n            border-radius: 12px;\n            font-size: 16px;\n            font-weight: 600;\n            cursor: pointer;\n            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);\n            transition: all 0.2s;\n        }\n\n        .login-button:hover {\n            box-shadow: 0 6px 16px rgba(34, 197, 94, 0.5);\n            transform: translateY(-2px);\n        }\n\n        .login-button:active {\n            transform: translateY(0);\n        }\n\n        .divider {\n            position: relative;\n            margin: 24px 0;\n            text-align: center;\n        }\n\n        .divider::before {\n            content: '';\n            position: absolute;\n            top: 50%;\n            left: 0;\n            right: 0;\n            height: 1px;\n            background: #d1d5db;\n        }\n\n        .divider span {\n            position: relative;\n            background: white;\n            padding: 0 12px;\n            color: #6b7280;\n            font-size: 14px;\n        }\n\n        .social-buttons {\n            display: grid;\n            grid-template-columns: 1fr 1fr;\n            gap: 12px;\n            margin-bottom: 24px;\n        }\n\n        .social-btn {\n            display: flex;\n            align-items: center;\n            justify-content: center;\n            padding: 10px;\n            border: 1px solid #d1d5db;\n            border-radius: 12px;\n            background: white;\n            cursor: pointer;\n            transition: background 0.2s;\n        }\n\n        .social-btn:hover {\n            background: #f9fafb;\n        }\n\n        .social-btn svg {\n            width: 20px;\n            height: 20px;\n        }\n\n        .signup-text {\n            text-align: center;\n            color: #6b7280;\n            font-size: 14px;\n        }\n\n        .signup-link {\n            color: #22c55e;\n            text-decoration: none;\n            font-weight: 600;\n            transition: color 0.2s;\n        }\n\n        .signup-link:hover {\n            color: #16a34a;\n        }\n\n        .error-message {\n            background: #fee2e2;\n            color: #dc2626;\n            padding: 12px;\n            border-radius: 8px;\n            margin-bottom: 16px;\n            font-size: 14px;\n            display: none;\n        }\n\n        .error-message.show {\n            display: block;\n        }\n    </style>\n</head>\n<body>\n    <div class=\"bg-pattern\"></div>\n    \n    <div class=\"login-card\">\n        <div class=\"logo-container\">\n            <div class=\"logo\">\n                <div class=\"logo-text\">M</div>\n            </div>\n            <h1>Murr</h1>\n            <p class=\"subtitle\">Welcome back! Please login to continue</p>\n        </div>\n\n        <div id=\"errorMessage\" class=\"error-message\"></div>\n\n        <div class=\"input-group\">\n            <label for=\"username\">Username</label>\n            <div class=\"input-wrapper\">\n                <svg class=\"input-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                    <path d=\"M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\"></path>\n                    <circle cx=\"12\" cy=\"7\" r=\"4\"></circle>\n                </svg>\n                <input type=\"text\" id=\"username\" placeholder=\"Enter your username\" autofocus>\n            </div>\n        </div>\n\n        <div class=\"input-group\">\n            <label for=\"password\">Password</label>\n            <div class=\"input-wrapper\">\n                <svg class=\"input-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                    <rect x=\"3\" y=\"11\" width=\"18\" height=\"11\" rx=\"2\" ry=\"2\"></rect>\n                    <path d=\"M7 11V7a5 5 0 0 1 10 0v4\"></path>\n                </svg>\n                <input type=\"password\" id=\"password\" placeholder=\"Enter your password\">\n            </div>\n        </div>\n\n        <div class=\"remember-forgot\">\n            <label class=\"remember-label\">\n                <input type=\"checkbox\" id=\"remember\">\n                Remember me\n            </label>\n            <a href=\"#\" class=\"forgot-link\">Forgot password?</a>\n        </div>\n\n        <button class=\"login-button\" onclick=\"handleLogin()\">Sign In</button>\n\n        <div class=\"divider\">\n            <span>or continue with</span>\n        </div>\n\n        <div class=\"social-buttons\">\n            <button class=\"social-btn\">\n                <svg viewBox=\"0 0 24 24\">\n                    <path fill=\"#4285F4\" d=\"M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z\"/>\n                    <path fill=\"#34A853\" d=\"M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z\"/>\n                    <path fill=\"#FBBC05\" d=\"M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z\"/>\n                    <path fill=\"#EA4335\" d=\"M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z\"/>\n                </svg>\n            </button>\n            <button class=\"social-btn\">\n                <svg fill=\"currentColor\" viewBox=\"0 0 24 24\">\n                    <path d=\"M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z\"/>\n                </svg>\n            </button>\n        </div>\n\n        <p class=\"signup-text\">\n            Don't have an account? <a href=\"#\" class=\"signup-link\">Sign up</a>\n        </p>\n    </div>\n\n    <script>\n        function showError(message) {\n            const errorDiv = document.getElementById('errorMessage');\n            errorDiv.textContent = message;\n            errorDiv.classList.add('show');\n            setTimeout(() => {\n                errorDiv.classList.remove('show');\n            }, 5000);\n        }\n\n        function handleLogin() {\n            const username = document.getElementById('username').value;\n            const password = document.getElementById('password').value;\n            const remember = document.getElementById('remember').checked;\n\n            if (!username || !password) {\n                showError('Please enter both username and password');\n                return;\n            }\n\n            // Send credentials to Node-RED\n            fetch('/api/login', {\n                method: 'POST',\n                headers: {\n                    'Content-Type': 'application/json',\n                },\n                body: JSON.stringify({\n                    username: username,\n                    password: password,\n                    remember: remember\n                })\n            })\n            .then(response => response.json())\n            .then(data => {\n                if (data.success) {\n                    // Store session token if provided\n                    if (data.token) {\n                        sessionStorage.setItem('authToken', data.token);\n                    }\n                    // Redirect to dashboard\n                    window.location.href = data.redirect || '/ui';\n                } else {\n                    showError(data.message || 'Invalid username or password');\n                }\n            })\n            .catch(error => {\n                console.error('Error:', error);\n                showError('Login failed. Please try again.');\n            });\n        }\n\n        // Allow Enter key to submit\n        document.getElementById('password').addEventListener('keypress', function(e) {\n            if (e.key === 'Enter') {\n                handleLogin();\n            }\n        });\n\n        document.getElementById('username').addEventListener('keypress', function(e) {\n            if (e.key === 'Enter') {\n                document.getElementById('password').focus();\n            }\n        });\n    </script>\n</body>\n</html>",
+        "output": "str",
+        "x": 320,
+        "y": 100,
+        "wires": [
+            [
+                "http_response_login"
+            ]
+        ]
+    },
+    {
+        "id": "http_response_login",
+        "type": "http response",
+        "z": "login_flow_tab",
+        "name": "Send Login Page",
+        "statusCode": "",
+        "headers": {},
+        "x": 540,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "http_post_login",
+        "type": "http in",
+        "z": "login_flow_tab",
+        "name": "POST /api/login",
+        "url": "/api/login",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 130,
+        "y": 200,
+        "wires": [
+            [
+                "auth_function"
+            ]
+        ]
+    },
+    {
+        "id": "auth_function",
+        "type": "function",
+        "z": "login_flow_tab",
+        "name": "Authenticate User",
+        "func": "// Get credentials from request\nconst username = msg.payload.username;\nconst password = msg.payload.password;\nconst remember = msg.payload.remember;\n\n// Define your valid users here\n// In production, this should check against a database\nconst validUsers = {\n    \"admin\": \"private\",\n    \"user\": \"password\",\n    \"murr\": \"murr2024\"\n};\n\n// Check if user exists and password matches\nif (validUsers[username] && validUsers[username] === password) {\n    // Successful login\n    msg.statusCode = 200;\n    msg.payload = {\n        success: true,\n        message: \"Login successful\",\n        redirect: \"/ui\",\n        token: \"session_\" + Date.now(), // Simple token generation\n        username: username\n    };\n    \n    // Store session info in flow context (optional)\n    flow.set('currentUser', username);\n    flow.set('loginTime', new Date().toISOString());\n    \n} else {\n    // Failed login\n    msg.statusCode = 401;\n    msg.payload = {\n        success: false,\n        message: \"Invalid username or password\"\n    };\n}\n\n// Set response headers\nmsg.headers = {\n    'Content-Type': 'application/json'\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 200,
+        "wires": [
+            [
+                "http_response_auth",
+                "debug_auth"
+            ]
+        ]
+    },
+    {
+        "id": "http_response_auth",
+        "type": "http response",
+        "z": "login_flow_tab",
+        "name": "Send Auth Response",
+        "statusCode": "",
+        "headers": {},
+        "x": 580,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "debug_auth",
+        "type": "debug",
+        "z": "login_flow_tab",
+        "name": "Debug Login Attempts",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 580,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "comment_instructions",
+        "type": "comment",
+        "z": "login_flow_tab",
+        "name": "MURR LOGIN SYSTEM - Instructions in comments below",
+        "info": "# Murr Login System Setup\n\n## How to Use:\n\n1. **Deploy this flow**\n\n2. **Access the login page**:\n   - Go to: http://localhost:1880/login\n   - Or: http://YOUR_IP:1880/login\n\n3. **Default Credentials**:\n   - Username: admin | Password: admin123\n   - Username: user | Password: password\n   - Username: murr | Password: murr2024\n\n4. **Customize**:\n   - Edit the 'Authenticate User' function node to add/modify users\n   - Change the redirect URL from '/ui' to your dashboard path\n   - Add database authentication instead of hardcoded users\n\n## Security Notes:\n\n- This is a basic implementation for demonstration\n- For production:\n  * Use proper password hashing (bcrypt)\n  * Store users in a database\n  * Implement session management\n  * Add rate limiting\n  * Use HTTPS\n  * Add CSRF protection\n\n## Connecting to Your Dashboard:\n\n- After successful login, users are redirected to '/ui'\n- Change this in the 'Authenticate User' function if needed\n- You can protect your dashboard routes by checking session tokens\n\n## Troubleshooting:\n\n- Check the Debug panel for login attempts\n- Make sure port 1880 is accessible\n- Verify Node-RED is running\n- Check browser console for errors",
+        "x": 250,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "inject_test",
+        "type": "inject",
+        "z": "login_flow_tab",
+        "name": "Test Login URL",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 130,
+        "y": 320,
+        "wires": [
+            [
+                "show_login_url"
+            ]
+        ]
+    },
+    {
+        "id": "show_login_url",
+        "type": "function",
+        "z": "login_flow_tab",
+        "name": "Show Login URL",
+        "func": "const host = env.get('HOSTNAME') || 'localhost';\nconst port = env.get('PORT') || '1880';\n\nmsg.payload = `Login page available at: http://${host}:${port}/login`;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 320,
+        "wires": [
+            [
+                "debug_url"
+            ]
+        ]
+    },
+    {
+        "id": "debug_url",
+        "type": "debug",
+        "z": "login_flow_tab",
+        "name": "Login URL",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 530,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "http_get_logout",
+        "type": "http in",
+        "z": "login_flow_tab",
+        "name": "GET /logout",
+        "url": "/logout",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 420,
+        "wires": [
+            [
+                "logout_function"
+            ]
+        ]
+    },
+    {
+        "id": "logout_function",
+        "type": "function",
+        "z": "login_flow_tab",
+        "name": "Clear Session",
+        "func": "// Clear session data from flow context\nflow.set('currentUser', null);\nflow.set('loginTime', null);\n\n// Log the logout event\nnode.warn('User logged out at ' + new Date().toISOString());\n\n// Pass message to template\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 420,
+        "wires": [
+            [
+                "logout_template"
+            ]
+        ]
+    },
+    {
+        "id": "logout_template",
+        "type": "template",
+        "z": "login_flow_tab",
+        "name": "Logout Page HTML",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "html",
+        "syntax": "mustache",
+        "template": "<!DOCTYPE html>\n<html>\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Logged Out - Murrelektronik</title>\n    <style>\n        * {\n            margin: 0;\n            padding: 0;\n            box-sizing: border-box;\n        }\n\n        body {\n            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;\n            min-height: 100vh;\n            background: linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #16a34a 100%);\n            display: flex;\n            align-items: center;\n            justify-content: center;\n            padding: 20px;\n            position: relative;\n            overflow: hidden;\n        }\n\n        .bg-pattern {\n            position: absolute;\n            inset: 0;\n            opacity: 0.1;\n            background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0);\n            background-size: 40px 40px;\n        }\n\n        .logout-card {\n            position: relative;\n            background: white;\n            border-radius: 32px;\n            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3);\n            padding: 60px 50px;\n            width: 100%;\n            max-width: 500px;\n            text-align: center;\n            animation: fadeIn 0.6s ease-out;\n        }\n\n        @keyframes fadeIn {\n            from {\n                opacity: 0;\n                transform: translateY(20px);\n            }\n            to {\n                opacity: 1;\n                transform: translateY(0);\n            }\n        }\n\n        .logo-container {\n            margin-bottom: 40px;\n        }\n\n        .logo-box {\n            display: inline-block;\n            background: linear-gradient(135deg, #22c55e, #16a34a);\n            border-radius: 20px;\n            padding: 24px 32px;\n            margin-bottom: 24px;\n            box-shadow: 0 12px 24px rgba(34, 197, 94, 0.35);\n            animation: pulse 2s ease-in-out infinite;\n        }\n\n        @keyframes pulse {\n            0%, 100% {\n                transform: scale(1);\n            }\n            50% {\n                transform: scale(1.05);\n            }\n        }\n\n        .company-logo {\n            color: white;\n            font-size: 28px;\n            font-weight: 700;\n            letter-spacing: 1px;\n            line-height: 1.4;\n        }\n\n        .company-name {\n            display: block;\n            font-size: 32px;\n        }\n\n        .checkmark-container {\n            width: 80px;\n            height: 80px;\n            border-radius: 50%;\n            background: linear-gradient(135deg, #22c55e, #16a34a);\n            margin: 0 auto 24px;\n            display: flex;\n            align-items: center;\n            justify-content: center;\n            animation: scaleIn 0.5s ease-out 0.3s both;\n        }\n\n        @keyframes scaleIn {\n            from {\n                transform: scale(0);\n            }\n            to {\n                transform: scale(1);\n            }\n        }\n\n        .checkmark {\n            width: 40px;\n            height: 40px;\n            stroke: white;\n            stroke-width: 3;\n            stroke-linecap: round;\n            stroke-linejoin: round;\n            fill: none;\n            animation: drawCheck 0.5s ease-out 0.5s both;\n        }\n\n        @keyframes drawCheck {\n            from {\n                stroke-dasharray: 100;\n                stroke-dashoffset: 100;\n            }\n            to {\n                stroke-dasharray: 100;\n                stroke-dashoffset: 0;\n            }\n        }\n\n        h1 {\n            font-size: 32px;\n            font-weight: bold;\n            color: #1f2937;\n            margin-bottom: 12px;\n        }\n\n        .message {\n            color: #6b7280;\n            font-size: 16px;\n            line-height: 1.6;\n            margin-bottom: 32px;\n        }\n\n        .divider {\n            height: 1px;\n            background: linear-gradient(to right, transparent, #d1d5db, transparent);\n            margin: 32px 0;\n        }\n\n        .actions {\n            display: flex;\n            flex-direction: column;\n            gap: 12px;\n        }\n\n        .btn {\n            padding: 14px 28px;\n            border-radius: 12px;\n            font-size: 16px;\n            font-weight: 600;\n            cursor: pointer;\n            transition: all 0.2s;\n            text-decoration: none;\n            display: inline-block;\n            border: none;\n        }\n\n        .btn-primary {\n            background: linear-gradient(to right, #22c55e, #16a34a);\n            color: white;\n            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);\n        }\n\n        .btn-primary:hover {\n            box-shadow: 0 6px 16px rgba(34, 197, 94, 0.5);\n            transform: translateY(-2px);\n        }\n\n        .btn-secondary {\n            background: white;\n            color: #22c55e;\n            border: 2px solid #22c55e;\n        }\n\n        .btn-secondary:hover {\n            background: #f0fdf4;\n        }\n\n        .footer-text {\n            margin-top: 24px;\n            color: #9ca3af;\n            font-size: 14px;\n        }\n\n        .session-info {\n            background: #f0fdf4;\n            border: 1px solid #86efac;\n            border-radius: 8px;\n            padding: 12px;\n            margin-bottom: 24px;\n            font-size: 14px;\n            color: #166534;\n        }\n    </style>\n</head>\n<body>\n    <div class=\"bg-pattern\"></div>\n    \n    <div class=\"logout-card\">\n        <div class=\"logo-container\">\n            <div class=\"logo-box\">\n                <div class=\"company-logo\">\n                    <span class=\"company-name\">Murrelektronik</span>\n                </div>\n            </div>\n        </div>\n\n        <div class=\"checkmark-container\">\n            <svg class=\"checkmark\" viewBox=\"0 0 52 52\">\n                <path d=\"M14 27l8 8 16-16\"/>\n            </svg>\n        </div>\n\n        <h1>Successfully Logged Out</h1>\n        <p class=\"message\">\n            You have been safely logged out of your session.<br>\n            Thank you for using Murrelektronik systems.\n        </p>\n\n        <div class=\"session-info\">\n            ✓ Session cleared<br>\n            ✓ Cache cleaned<br>\n            ✓ Cookies removed\n        </div>\n\n        <div class=\"divider\"></div>\n\n        <div class=\"actions\">\n            <a href=\"/login\" class=\"btn btn-primary\">\n                Sign In Again\n            </a>\n        </div>\n\n        <p class=\"footer-text\">\n            © 2026 Murrelektronik. All rights reserved.\n        </p>\n    </div>\n\n    <script>\n        // Clear any session storage\n        sessionStorage.clear();\n        localStorage.removeItem('authToken');\n        \n        // Auto redirect after 10 seconds\n        setTimeout(() => {\n            const urlParams = new URLSearchParams(window.location.search);\n            const redirect = urlParams.get('redirect');\n            if (redirect) {\n                window.location.href = redirect;\n            }\n        }, 10000);\n    </script>\n</body>\n</html>",
+        "output": "str",
+        "x": 510,
+        "y": 420,
+        "wires": [
+            [
+                "http_response_logout"
+            ]
+        ]
+    },
+    {
+        "id": "http_response_logout",
+        "type": "http response",
+        "z": "login_flow_tab",
+        "name": "Send Logout Page",
+        "statusCode": "",
+        "headers": {},
+        "x": 720,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "comment_logout",
+        "type": "comment",
+        "z": "login_flow_tab",
+        "name": "LOGOUT FLOW - Access at /logout",
+        "info": "# Logout Flow\n\n## Usage:\n- Navigate to: http://localhost:1880/logout\n- Or add a logout button in your dashboard that redirects to /logout\n\n## Features:\n- Clears session data\n- Shows confirmation page with Murrelektronik branding\n- Auto-redirects after 10 seconds (optional)\n- Provides buttons to login again or return to dashboard\n\n## Adding Logout Button to Dashboard:\n\nAdd this HTML to your dashboard:\n```html\n<button onclick=\"window.location.href='/logout'\">Logout</button>\n```",
+        "x": 170,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "9ed14269fb057b6d",
+        "type": "ui_template",
+        "z": "login_flow_tab",
+        "group": "9631860f1a2e6b4d",
+        "name": "Logout",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "format": "<!-- Add this to your Node-RED Dashboard UI Template -->\n<style>\n    .logout-container {\n        position: relative;\n        display: inline-block;\n    }\n\n    .logout-btn {\n        background: linear-gradient(135deg, #ef4444, #dc2626);\n        color: white;\n        border: none;\n        padding: 12px 24px;\n        border-radius: 10px;\n        font-size: 15px;\n        font-weight: 600;\n        cursor: pointer;\n        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);\n        transition: all 0.3s ease;\n        display: flex;\n        align-items: center;\n        gap: 8px;\n    }\n\n    .logout-btn:hover {\n        background: linear-gradient(135deg, #dc2626, #b91c1c);\n        box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);\n        transform: translateY(-2px);\n    }\n\n    .logout-btn:active {\n        transform: translateY(0);\n    }\n\n    .logout-icon {\n        width: 18px;\n        height: 18px;\n    }\n\n    /* Modal Styles */\n    .modal-overlay {\n        display: none;\n        position: fixed;\n        top: 0;\n        left: 0;\n        right: 0;\n        bottom: 0;\n        background: rgba(0, 0, 0, 0.6);\n        backdrop-filter: blur(4px);\n        z-index: 9999;\n        animation: fadeIn 0.2s ease;\n    }\n\n    .modal-overlay.show {\n        display: flex;\n        align-items: center;\n        justify-content: center;\n    }\n\n    @keyframes fadeIn {\n        from {\n            opacity: 0;\n        }\n\n        to {\n            opacity: 1;\n        }\n    }\n\n    .modal-content {\n        background: white;\n        border-radius: 20px;\n        padding: 32px;\n        max-width: 420px;\n        width: 90%;\n        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);\n        animation: slideUp 0.3s ease;\n    }\n\n    @keyframes slideUp {\n        from {\n            transform: translateY(50px);\n            opacity: 0;\n        }\n\n        to {\n            transform: translateY(0);\n            opacity: 1;\n        }\n    }\n\n    .modal-header {\n        text-align: center;\n        margin-bottom: 24px;\n    }\n\n    .modal-icon {\n        width: 64px;\n        height: 64px;\n        margin: 0 auto 16px;\n        background: linear-gradient(135deg, #fef3c7, #fde68a);\n        border-radius: 50%;\n        display: flex;\n        align-items: center;\n        justify-content: center;\n        animation: bounce 0.6s ease;\n    }\n\n    @keyframes bounce {\n\n        0%,\n        100% {\n            transform: scale(1);\n        }\n\n        50% {\n            transform: scale(1.1);\n        }\n    }\n\n    .warning-icon {\n        color: #f59e0b;\n        font-size: 32px;\n        font-weight: bold;\n    }\n\n    .modal-title {\n        font-size: 24px;\n        font-weight: 700;\n        color: #1f2937;\n        margin-bottom: 8px;\n    }\n\n    .modal-message {\n        font-size: 15px;\n        color: #6b7280;\n        line-height: 1.6;\n    }\n\n    .modal-actions {\n        display: flex;\n        gap: 12px;\n        margin-top: 28px;\n    }\n\n    .modal-btn {\n        flex: 1;\n        padding: 12px 24px;\n        border: none;\n        border-radius: 10px;\n        font-size: 15px;\n        font-weight: 600;\n        cursor: pointer;\n        transition: all 0.2s;\n    }\n\n    .btn-confirm {\n        background: linear-gradient(135deg, #ef4444, #dc2626);\n        color: white;\n        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);\n    }\n\n    .btn-confirm:hover {\n        background: linear-gradient(135deg, #dc2626, #b91c1c);\n        box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);\n        transform: translateY(-2px);\n    }\n\n    .btn-cancel {\n        background: #f3f4f6;\n        color: #374151;\n    }\n\n    .btn-cancel:hover {\n        background: #e5e7eb;\n    }\n</style>\n\n<div class=\"logout-container\">\n    <!-- Logout Button -->\n    <button class=\"logout-btn\" onclick=\"showLogoutModal()\">\n        <svg class=\"logout-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <path d=\"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4\"></path>\n            <polyline points=\"16 17 21 12 16 7\"></polyline>\n            <line x1=\"21\" y1=\"12\" x2=\"9\" y2=\"12\"></line>\n        </svg>\n        Logout\n    </button>\n\n    <!-- Confirmation Modal -->\n    <div id=\"logoutModal\" class=\"modal-overlay\">\n        <div class=\"modal-content\">\n            <div class=\"modal-header\">\n                <div class=\"modal-icon\">\n                    <span class=\"warning-icon\">!</span>\n                </div>\n                <h2 class=\"modal-title\">Are you sure?</h2>\n                <p class=\"modal-message\">\n                    Do you really want to log out? You will need to sign in again to access the dashboard.\n                </p>\n            </div>\n            <div class=\"modal-actions\">\n                <button class=\"modal-btn btn-cancel\" onclick=\"hideLogoutModal()\">\n                    Cancel\n                </button>\n                <button class=\"modal-btn btn-confirm\" onclick=\"confirmLogout()\">\n                    Yes, Logout\n                </button>\n            </div>\n        </div>\n    </div>\n</div>\n\n<script>\n    function showLogoutModal() {\n        document.getElementById('logoutModal').classList.add('show');\n    }\n\n    function hideLogoutModal() {\n        document.getElementById('logoutModal').classList.remove('show');\n    }\n\n    function confirmLogout() {\n        // Redirect to logout endpoint\n        window.location.href = '/logout';\n    }\n\n    // Close modal when clicking outside\n    document.getElementById('logoutModal').addEventListener('click', function(e) {\n        if (e.target === this) {\n            hideLogoutModal();\n        }\n    });\n\n    // Close modal with Escape key\n    document.addEventListener('keydown', function(e) {\n        if (e.key === 'Escape') {\n            hideLogoutModal();\n        }\n    });\n</script>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 110,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ea98f9c20aa69168",
+        "type": "comment",
+        "z": "login_flow_tab",
+        "name": "LOGOUT Button",
+        "info": "",
+        "x": 120,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "9631860f1a2e6b4d",
+        "type": "ui_group",
+        "name": "Group 1",
+        "tab": "a198612bb35a73e4",
+        "order": 1,
+        "disp": false,
+        "width": "5",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "a198612bb35a73e4",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    }
+]
